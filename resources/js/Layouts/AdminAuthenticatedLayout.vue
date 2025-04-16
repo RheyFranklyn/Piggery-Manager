@@ -1,26 +1,33 @@
 <script lang="ts">
-export const description
-  = 'A sidebar that collapses to icons.'
-export const iframeHeight = '800px'
-export const containerClass = 'w-full h-full'
+  export const description
+    = 'A sidebar that collapses to icons.'
+  export const iframeHeight = '800px'
+  export const containerClass = 'w-full h-full'
 </script>
+
 <script setup lang="ts">
-import AppSidebar from '@/Components/AppSidebar.vue'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/Components/ui/breadcrumb'
-import { Separator } from '@/Components/ui/separator'
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from '@/Components/ui/sidebar'
+  import { usePage } from '@inertiajs/vue3' //use to get the loggged in user attributes
+  
+  import AppSidebar from '@/Components/adminComponents/AppSidebar.vue'
+  import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+  } from '@/Components/ui/breadcrumb'
+  import { Separator } from '@/Components/ui/separator'
+  import {
+    SidebarInset,
+    SidebarProvider,
+    SidebarTrigger,
+  } from '@/Components/ui/sidebar'
+
+const page = usePage() //inirialize the import
+const user = page.props.auth.user // then get the logged in user
 </script>
+
 <template>
   <SidebarProvider>
     <AppSidebar />
@@ -29,17 +36,22 @@ import {
         <div class="flex items-center gap-2 px-4">
           <SidebarTrigger class="-ml-1" />
           <Separator orientation="vertical" class="mr-2 h-4" />
+
           <Breadcrumb>
             <BreadcrumbList>
+              
               <BreadcrumbItem class="hidden md:block">
                 <BreadcrumbLink href="#">
-                  Building Your Application
+                  Welcome! {{ user.name }} <!-- then call it here. -->
                 </BreadcrumbLink>
               </BreadcrumbItem>
+
               <BreadcrumbSeparator class="hidden md:block" />
+
               <BreadcrumbItem>
                 <BreadcrumbPage>Data Fetching</BreadcrumbPage>
               </BreadcrumbItem>
+
             </BreadcrumbList>
           </Breadcrumb>
         </div>

@@ -1,6 +1,6 @@
 import { cva } from 'class-variance-authority';
 
-export { default as Sidebar } from './Sidebar.vue';
+export { default as Sidebar } from './Sidebar.vue'; //if naa gale ingani export { default as chuchu } ag inig import nimo is ingani "--import GuestLayout from '@/Layouts/GuestLayout.vue'--" way curlt brace;
 export { default as SidebarContent } from './SidebarContent.vue';
 export { default as SidebarFooter } from './SidebarFooter.vue';
 export { default as SidebarGroup } from './SidebarGroup.vue';

@@ -33,7 +33,7 @@ const data = {
       icon: SquareTerminal,
       isActive: true,
       items: [
-        { title: 'All Pigs', url: '#' },
+        { title: 'All Pigs', url: route('Pigs.index') },
         { title: 'Weight Logs', url: '#' },
         { title: 'Health & Treatments', url: '#' },
       ],

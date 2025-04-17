@@ -26,6 +26,14 @@
 
 const page = usePage() //inirialize the import
 const user = page.props.auth.user // then get the logged in user
+
+//Now the layout displays the breadcrumb title based on the page you're on, because it’s getting it from the prop.
+const props = defineProps({
+  pageTitleTextForBreedcrumbs: {
+    type: String,
+    default: 'Dashboard'
+  }
+})
 </script>
 
 <template>
@@ -49,7 +57,7 @@ const user = page.props.auth.user // then get the logged in user
               <BreadcrumbSeparator class="hidden md:block" />
 
               <BreadcrumbItem>
-                <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                <BreadcrumbPage>{{ props.pageTitleTextForBreedcrumbs }}</BreadcrumbPage> <!--  if ag page way title then automatically use the 'Dashboard' kay maomay naka default sa props nimo sa babaw na script -->
               </BreadcrumbItem>
 
             </BreadcrumbList>

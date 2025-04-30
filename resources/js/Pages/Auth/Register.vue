@@ -1,112 +1,88 @@
 <script setup>
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import InputError from '@/Components/InputError.vue'
+import InputLabel from '@/Components/InputLabel.vue'
+import PrimaryButton from '@/Components/PrimaryButton.vue'
+import TextInput from '@/Components/TextInput.vue'
+import { Head, useForm } from '@inertiajs/vue3'
 
-defineOptions({ layout: GuestLayout });
+// Form for adding pigs
 const form = useForm({
-    name: '',
-    email: '',
-    password: '',
-    password_confirmation: '',
-});
+    penNumber: '',
+    dateBought: '',
+    cost: '',
+    breed: '',
+    expectedSellDate: '',
+    startingWeight: '',
+})
 
+// Submit function
 const submit = () => {
-    form.post(route('register'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
-    });
-};
+    form.post(route('Admin-Pigs.store'), {
+        onSuccess: () => {
+            form.reset()
+        },
+    })
+}
 </script>
 
 <template>
-        <Head title="Register" />
+    <Head title="Add Pig" />
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="name" value="Name" />
+    <form @submit.prevent="submit">
+        <!-- Pen Number -->
+        <div class="mt-4">
+            <InputLabel for="penNumber" value="Pen Number" />
+            <TextInput id="penNumber" type="text" class="mt-1 block w-full" v-model="form.penNumber" required />
+            <InputError class="mt-2" :message="form.errors.penNumber" />
+        </div>
 
-                <TextInput
-                    id="name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.name"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
+        <!-- Date Bought -->
+        <div class="mt-4">
+            <InputLabel for="dateBought" value="Date Bought" />
+            <TextInput id="dateBought" type="date" class="mt-1 block w-full" v-model="form.dateBought" required />
+            <InputError class="mt-2" :message="form.errors.dateBought" />
+        </div>
 
-                <InputError class="mt-2" :message="form.errors.name" />
-            </div>
+        <!-- Cost -->
+        <div class="mt-4">
+            <InputLabel for="cost" value="Cost" />
+            <TextInput id="cost" type="number" class="mt-1 block w-full" v-model="form.cost" required />
+            <InputError class="mt-2" :message="form.errors.cost" />
+        </div>
 
-            <div class="mt-4">
-                <InputLabel for="email" value="Email" />
+        <!-- Breed -->
+        <div class="mt-4">
+            <InputLabel for="breed" value="Breed (optional)" />
+            <TextInput id="breed" type="text" class="mt-1 block w-full" v-model="form.breed" />
+            <InputError class="mt-2" :message="form.errors.breed" />
+        </div>
 
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autocomplete="username"
-                />
+        <!-- Expected Sell Date -->
+        <div class="mt-4">
+            <InputLabel for="expectedSellDate" value="Expected Sell Date" />
+            <TextInput id="expectedSellDate" type="date" class="mt-1 block w-full" v-model="form.expectedSellDate" required />
+            <InputError class="mt-2" :message="form.errors.expectedSellDate" />
+        </div>
 
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
+        <!-- Starting Weight -->
+        <div class="mt-4">
+            <InputLabel for="startingWeight" value="Starting Weight (kg)" />
+            <TextInput
+                id="startingWeight"
+                type="text"
+                class="mt-1 block w-full"
+                v-model="form.startingWeight"
+                placeholder="e.g. 12.5 kg"
+                required
+            />
+            <InputError class="mt-2" :message="form.errors.startingWeight" />
+        </div>
 
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel
-                    for="password_confirmation"
-                    value="Confirm Password"
-                />
-
-                <TextInput
-                    id="password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password_confirmation"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError
-                    class="mt-2"
-                    :message="form.errors.password_confirmation"
-                />
-            </div>
-
-            <div class="mt-4 flex items-center justify-end">
-                <Link
-                    :href="route('login')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                    Already registered?
-                </Link>
-
-                <PrimaryButton
-                    class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Register
-                </PrimaryButton>
-            </div>
-        </form>
+        <!-- Submit -->
+        <div class="mt-6 flex justify-end">
+            <PrimaryButton :disabled="form.processing" class="ml-4">
+                Save Pig
+            </PrimaryButton>
+        </div>
+    </form>
 </template>

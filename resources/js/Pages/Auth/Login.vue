@@ -6,7 +6,7 @@ export const description = 'A login page with form and image.'
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent } from '@/Components/ui/card';
 import { Input } from '@/Components/ui/input';
-import { Label } from '@/Components/ui/label';
+import { Label } from '@/components/ui/label';
 
 // import Checkbox from '@/Components/Checkbox.vue';
 import InputError from '@/Components/InputError.vue';

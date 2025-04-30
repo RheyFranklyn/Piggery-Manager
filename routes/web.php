@@ -31,4 +31,4 @@ require __DIR__ . '/auth.php';
 
 
 //admin
-Route::resource('Pigs', PigsController::class);
+Route::resource('Admin-Pigs', PigsController::class);

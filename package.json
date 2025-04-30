@@ -11,7 +11,7 @@
         "@tailwindcss/vite": "^4.0.0",
         "@vitejs/plugin-vue": "^5.0.0",
         "autoprefixer": "^10.4.21",
-        "axios": "^1.8.2",
+        "axios": "^1.8.4",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^1.2.0",
         "postcss": "^8.5.3",
@@ -20,6 +20,7 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "@heroicons/vue": "^2.2.0",
         "@inertiajs/vue3": "^2.0.8",
         "@tanstack/vue-table": "^8.21.3",
         "@vee-validate/zod": "^4.15.0",

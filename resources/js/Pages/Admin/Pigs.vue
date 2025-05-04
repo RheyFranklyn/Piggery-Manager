@@ -52,6 +52,8 @@ const form = useForm({
   startingWeight: '',
 })
 
+//==============================================================================
+
 // For live formatting of kg input
 const startingWeightRaw = ref('')
 let debounceTimer: ReturnType<typeof setTimeout>
@@ -65,6 +67,8 @@ watch(startingWeightRaw, (val) => {
     }
   }, 500)
 })
+
+//==============================================================================
 
 // Submit form handler
 const submit = () => {
@@ -88,6 +92,8 @@ const submit = () => {
   })
 }
 
+//==============================================================================
+// for fetching data from database
 // Pig interface definition
 interface Pig {
   id: number
@@ -106,6 +112,8 @@ const props = defineProps<{
   pigs: Pig[]
 }>()
 
+//==============================================================================
+
 // Function to format the date in a human-readable format
 function formatDate(date: string): string {
   const options: { year: 'numeric'; month: 'long'; day: 'numeric' } = {
@@ -117,23 +125,80 @@ function formatDate(date: string): string {
   return new Date(date).toLocaleDateString('en-US', options)
 }
 
+//==============================================================================
 
-// Edit Pig (redirect to edit page)
-const editPig = (id: number) => {
-  // Redirect to the edit page (make sure the route is correct)
-  Inertia.get(`/Admin-Pigs/${id}`)
+//edit functionality
+//initializing
+const editDialogOpen = ref(false)
+const editingPig = ref<Pig | null>(null)
+const isEditSaving = ref(false) //to disabled the save changes  btn once clicked
+
+//must do this first in populating form
+const updateForm = useForm({
+  penNumber: '',
+  expectedSellDate: '',
+  currentWeight: '',
+})
+
+const openEditDialog = (pig: Pig) => {
+  editingPig.value = { ...pig } // clone to avoid mutating original / the data in a specific row based ehere u click it, this like a flag for submut edit cuz if way sud siya return siya dritso sa submitedit
+
+  // When the user clicks "Edit", populate the form with the selected pig's data:
+  updateForm.penNumber = String(pig.pen_number)
+  updateForm.expectedSellDate = pig.expected_sell_date
+  updateForm.currentWeight = pig.current_weight
+  
+  editDialogOpen.value = true
+}
+
+const editPig = (pig: Pig) => {//function to be called nga naas edit icon para moshow ag dialog for edit
+  openEditDialog(pig)
+}
+
+const submitEdit = () => {
+  if (!editingPig.value) return
+
+  isEditSaving.value = true // disabled save changes btn in edit dialog
+
+  updateForm.put(`/Admin-Pigs/${editingPig.value.id}`, {
+    preserveScroll: true,
+    onSuccess: () => {
+      toast({
+        title: 'Updated!',
+        description: 'Pig details have been updated successfully.',
+      })
+      editDialogOpen.value = false
+    },
+    onError: () => {
+      const errors = updateForm.errors as Record<string, string>
+      console.log(errors)
+      toast({
+        title: 'Error',
+        description: 'Something went wrong while updating.',
+        class: 'bg-red-400 text-white border border-red-500',
+      })
+    },
+    onFinish: () => {
+      isEditSaving.value = false // Re-enable the button
+    },
+  })
 }
 
 
-// Delete confirmation dialog logic
+//==============================================================================
+
+//delete functionality
+// Delete confirmation dialog logic Initialization
 const confirmDialogOpen = ref(false)
 const pendingDeleteId = ref<number | null>(null)
 const isDeleting = ref(false) //to disabled the delete btn once clicked
 
-const askDelete = (id: number) => {
+//use on delete icon
+const askDelete = (id: number) => { 
   pendingDeleteId.value = id
   confirmDialogOpen.value = true
 }
+
 // Delete Pig
 const confirmDelete = () => {
 
@@ -167,13 +232,16 @@ const confirmDelete = () => {
   })
 
 }
+
+//==============================================================================
+
 </script>
 
 <template>
   <Head title="| All Pigs" />
   <Toaster />
     
-   <!-- Confirmation Dialog -->
+   <!-- Confirmation Dialog for delete-->
   <Dialog v-model:open="confirmDialogOpen">
     <DialogContent class="text-center">
       <DialogHeader>
@@ -321,6 +389,51 @@ const confirmDelete = () => {
     </DialogContent>
   </Dialog>
 
+  <!-- EDit Dialog -->
+  <Dialog v-model:open="editDialogOpen">
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Edit Pig</DialogTitle>
+      <DialogDescription>Update the pig’s details.</DialogDescription>
+    </DialogHeader>
+
+    <form @submit.prevent="submitEdit">
+      <FormField name="expectedSellDate">
+        <FormItem>
+          <FormLabel>Expected SellDate</FormLabel>
+          <FormControl>
+            <Input v-model="updateForm.expectedSellDate" type="date"/>
+          </FormControl>
+        </FormItem>
+
+        <FormItem name="penNumber">
+          <FormLabel>Pen Number</FormLabel>
+          <FormControl>
+            <Input v-model="updateForm.penNumber" type="number" />
+          </FormControl>
+        </FormItem>
+
+        <FormItem name="currentWeight">
+          <FormLabel>Current Wieght</FormLabel>
+          <FormControl>
+            <Input v-model="updateForm.currentWeight" type="text" />
+          </FormControl>
+        </FormItem>
+
+        <!-- Add other fields as needed -->
+      </FormField>
+
+      <DialogFooter class="mt-4">
+        <Button type="submit" :disabled="isEditSaving">
+          <span v-if="isEditSaving">Saving...</span>
+          <span v-else>Save Changes</span>
+        </Button>
+        <Button type="button" variant="secondary" @click="editDialogOpen = false">Cancel</Button>
+      </DialogFooter>
+    </form>
+  </DialogContent>
+</Dialog>
+
   <!--Table -->
   <Table>
     <TableCaption>A list of your Pigs.</TableCaption>
@@ -348,7 +461,7 @@ const confirmDelete = () => {
         <TableCell>{{pig.current_weight}}</TableCell>
         <TableCell class="text-right">{{ pig.cost }}</TableCell>
         <TableCell class="text-right">
-          <button @click="editPig(pig.id)" class="text-blue-500 hover:text-blue-700">
+          <button @click="editPig(pig)" class="text-blue-500 hover:text-blue-700">
             <PencilIcon class="h-5 w-5" />
           </button>
 

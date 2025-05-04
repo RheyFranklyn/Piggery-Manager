@@ -134,7 +134,33 @@ class PigsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'penNumber' => 'required|numeric',
+            'expectedSellDate' => 'required|date',
+            'currentWeight' => 'required|string',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $pig = Pigs::findOrFail($id); // fetch the pig record
+
+            $pig->update([
+                'pen_number' => $validated['penNumber'],
+                'expected_sell_date' => $validated['expectedSellDate'],
+                'current_weight' => $validated['currentWeight'],
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('Admin-Pigs.index')->with('success', 'Pig updated successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->withErrors([
+                'error' => 'Update failed. Please try again. ' . $e->getMessage(),
+            ]);
+        }
     }
 
     /**

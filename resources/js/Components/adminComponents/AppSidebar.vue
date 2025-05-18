@@ -59,17 +59,17 @@ const data = {
       ],
     },
     {
-      title: 'Settings',
+      title: 'Expenses & Sales',
       url: '#',
-      icon: Settings2,
+      icon:  PieChart,
       items: [
-        { title: 'General', url: '#' },
+        { title: 'Expense', url: route('Admin-Expenses.index') },
       ],
     },
   ],
   projects: [
     { name: 'Planning', url: '#', icon: Frame },
-    { name: 'Sales & Marketing', url: '#', icon: PieChart },
+    { name: 'Sales & Marketing', url: '#', icon: Settings2 },
     { name: 'Travel', url: '#', icon: Map },
   ],
 }

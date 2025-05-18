@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PigsController;
+use App\Http\Controllers\ExpensesController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -32,3 +33,4 @@ require __DIR__ . '/auth.php';
 
 //admin
 Route::resource('Admin-Pigs', PigsController::class);
+Route::resource('Admin-Expenses', ExpensesController::class);
